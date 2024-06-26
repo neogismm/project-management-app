@@ -4,8 +4,6 @@ export default function Home() {
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Welcome to Project Management Tool</h1>
-      <p>This is your project and task management application built with the MERN stack and Next.js.</p>
-
       <nav>
         <ul>
           <li>
