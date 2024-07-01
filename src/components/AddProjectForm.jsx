@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createProject } from '@/services/api';
 
-export default function AddProjectForm() {
+export default function AddProjectForm({ onProjectAdded }) {
   const [isFormVisible, setIsFormVisible] = useState(true);
   const {
     register,
@@ -21,6 +21,9 @@ export default function AddProjectForm() {
       console.log('Project created successfully:', response.data);
       reset(); // Reset form fields after successful submission
       setIsFormVisible(false);
+      if (onProjectAdded) {
+        onProjectAdded();
+      }
     } catch (error) {
       console.error('Error creating project:', error);
     }

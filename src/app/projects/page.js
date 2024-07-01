@@ -12,17 +12,18 @@ const Projects = () => {
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
-    const getProjects = async () => {
-      try {
-        const { data } = await fetchProjects();
-        setProjects(data);
-      } catch (err) {
-        setError('Failed to fetch projects');
-        console.error(err);
-      }
-    };
     getProjects();
   }, []);
+
+  const getProjects = async () => {
+    try {
+      const { data } = await fetchProjects();
+      setProjects(data);
+    } catch (err) {
+      setError('Failed to fetch projects');
+      console.error(err);
+    }
+  };
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -37,7 +38,7 @@ const Projects = () => {
   return (
     <>
       <div className='w-full flex justify-end items-center p-4'>
-        <AddProjectButton onClick={toggleForm } />
+        <AddProjectButton onClick={toggleForm} />
       </div>
       <div className='flex flex-col items-center justify-center min-h-screen'>
         <h1 className='text-3xl font-bold'>Projects</h1>
@@ -54,7 +55,7 @@ const Projects = () => {
         ) : (
           <div>No projects found</div>
         )}
-        {showForm && <AddProjectForm onHideForm={hideForm} />}
+        {showForm && <AddProjectForm onHideForm={hideForm} onProjectAdded={getProjects} />}
       </div>
     </>
   );
