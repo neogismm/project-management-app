@@ -68,7 +68,7 @@ const Projects = () => {
         )}
         {showForm && <AddProjectForm onHideForm={hideForm} onProjectAdded={getProjects} />}
       </div>
-      {modalOpen && <ProjectModal project={selectedProject} onClose={handleCloseModal} />}
+      {modalOpen && <ProjectModal project={selectedProject} onClose={handleCloseModal} onProjectDeleted={getProjects} />}
     </>
   );
 }
