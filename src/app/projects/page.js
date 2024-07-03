@@ -5,11 +5,14 @@ import { fetchProjects } from '../../services/api';
 import Link from 'next/link';
 import AddProjectButton from '@/components/AddProjectButton';
 import AddProjectForm from '@/components/AddProjectForm';
+import ProjectModal from '@/components/project-modal';
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
     getProjects();
@@ -33,6 +36,16 @@ const Projects = () => {
     setShowForm(false);
   };
 
+  const openModal = (project) => {
+    setSelectedProject(project); 
+    setModalOpen(true); 
+  };
+
+  const closeModal = (project) => {
+    setSelectedProject(null); 
+    setModalOpen(false); 
+  };
+
   if (error) return <div>Error: {error}</div>;
 
   return (
@@ -45,10 +58,8 @@ const Projects = () => {
         {projects.length > 0 ? (
           <ul>
             {projects.map((project) => (
-              <li key={project._id}>
-                <Link href={`/projects/${project._id}`} className="text-blue-500 underline cursor-pointer">
-                  {project.name}
-                </Link>
+              <li key={project._id} onClick={() => openModal(project)} className="text-blue-500 underline cursor-pointer">
+                {project.name}
               </li>
             ))}
           </ul>
@@ -57,6 +68,7 @@ const Projects = () => {
         )}
         {showForm && <AddProjectForm onHideForm={hideForm} onProjectAdded={getProjects} />}
       </div>
+      {modalOpen && <ProjectModal project={selectedProject} onClose />}
     </>
   );
 }
