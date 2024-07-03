@@ -1,12 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
-export default function ProjectModal( {project} ) {
+export default function ProjectModal({ project, onClose }) {
   const [open, setOpen] = useState(true)
 
+  const handleClose = () => {
+    setOpen(false);
+    onClose();
+  };
+
   return (
-    <Dialog className="relative z-10" open={open} onClose={setOpen}>
+    <Dialog className="relative z-10" open={open} onClose={handleClose}>
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -40,14 +45,14 @@ export default function ProjectModal( {project} ) {
               <button
                 type="button"
                 className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                onClick={() => setOpen(false)}
+                onClick={handleClose}
               >
                 Deactivate
               </button>
               <button
                 type="button"
                 className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                onClick={() => setOpen(false)}
+                onClick={handleClose}
                 data-autofocus
               >
                 Cancel
@@ -57,5 +62,5 @@ export default function ProjectModal( {project} ) {
         </div>
       </div>
     </Dialog>
-  )
+  );
 }
