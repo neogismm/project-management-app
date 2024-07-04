@@ -44,6 +44,7 @@ const Projects = () => {
   const handleCloseModal = () => {
     setSelectedProject(null);
     setModalOpen(false);
+    getProjects();
   };
 
   if (error) return <div>Error: {error}</div>;
