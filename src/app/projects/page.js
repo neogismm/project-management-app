@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { fetchProjects } from '../../services/api';
-import Link from 'next/link';
-import AddProjectButton from '@/components/AddProjectButton';
-import AddProjectForm from '@/components/AddProjectForm';
-import ProjectModal from '@/components/project-modal';
+import { useEffect, useState } from "react";
+import { fetchProjects } from "../../services/api";
+import Link from "next/link";
+import AddProjectButton from "@/components/AddProjectButton";
+import AddProjectForm from "@/components/AddProjectForm";
+import ProjectModal from "@/components/project-modal";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
@@ -23,7 +23,7 @@ const Projects = () => {
       const { data } = await fetchProjects();
       setProjects(data);
     } catch (err) {
-      setError('Failed to fetch projects');
+      setError("Failed to fetch projects");
       console.error(err);
     }
   };
@@ -51,15 +51,19 @@ const Projects = () => {
 
   return (
     <>
-      <div className='w-full flex justify-end items-center p-4'>
+      <div className="w-full flex justify-end items-center p-4">
         <AddProjectButton onClick={toggleForm} />
       </div>
-      <div className='flex flex-col items-center justify-center min-h-screen'>
-        <h1 className='text-3xl font-bold'>Projects</h1>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h1 className="text-3xl font-bold">Projects</h1>
         {projects.length > 0 ? (
           <ul>
             {projects.map((project) => (
-              <li key={project._id} onClick={() => handleOpenModal(project)} className="text-blue-500 underline cursor-pointer">
+              <li
+                key={project._id}
+                onClick={() => handleOpenModal(project)}
+                className="text-blue-500 underline cursor-pointer"
+              >
                 {project.name}
               </li>
             ))}
@@ -67,11 +71,19 @@ const Projects = () => {
         ) : (
           <div>No projects found</div>
         )}
-        {showForm && <AddProjectForm onHideForm={hideForm} onProjectAdded={getProjects} />}
+        {showForm && (
+          <AddProjectForm onHideForm={hideForm} onProjectAdded={getProjects} />
+        )}
       </div>
-      {modalOpen && <ProjectModal project={selectedProject} onClose={handleCloseModal} onProjectDeleted={getProjects} />}
+      {modalOpen && (
+        <ProjectModal
+          project={selectedProject}
+          onClose={handleCloseModal}
+          onProjectDeleted={getProjects}
+        />
+      )}
     </>
   );
-}
+};
 
 export default Projects;
