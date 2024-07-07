@@ -39,7 +39,7 @@ export default function ProjectModal({ project, onClose, onProjectDeleted }) {
                     >
                         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                             <div className="sm:flex sm:items-start sm:flex-col sm:space-y-4 relative">
-                                <Link href={`/project/${project._id}`}>
+                                <Link href={`/projects/${project._id}`}>
                                     <button type='submit' className="absolute right-0 top-1/2 transform -translate-y-1/2 mr-4 inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                         Go to project
                                     </button>
