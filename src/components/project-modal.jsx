@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { deleteProject } from '@/services/api'
 import UpdateProjectForm from './update-project-form'
+import Link from 'next/link'
 
 export default function ProjectModal({ project, onClose, onProjectDeleted }) {
     const [open, setOpen] = useState(true)
@@ -37,7 +38,12 @@ export default function ProjectModal({ project, onClose, onProjectDeleted }) {
                         className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
                     >
                         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                            <div className="sm:flex sm:items-start sm:flex-col sm:space-y-4">
+                            <div className="sm:flex sm:items-start sm:flex-col sm:space-y-4 relative">
+                                <Link href={`/project/${project._id}`}>
+                                    <button type='submit' className="absolute right-0 top-1/2 transform -translate-y-1/2 mr-4 inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                        Go to project
+                                    </button>
+                                </Link>
                                 <div className="text-center w-full">
                                     <DialogTitle as="h3" className="text-base font-semibold leading-6 text-gray-900">
                                         Update {project.name}
