@@ -1,9 +1,12 @@
-import React from 'react'
+'use client'
 
-const TaskPage = ({ params }) => {
+import React from 'react'
+import CustomKanban from '@/components/KanbanBoard'
+
+const Kanban = ({ params }) => {
   return (
-    <div>{params.id}</div>
+    <div> <CustomKanban projectId={params.id} /> </div>
   )
 }
 
-export default TaskPage
+export default Kanban
