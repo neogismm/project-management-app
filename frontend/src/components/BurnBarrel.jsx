@@ -14,13 +14,21 @@ const BurnBarrel = ({ setCards }) => {
     setActive(false);
   };
 
-  const handleDragEnd = (e) => {
+  const handleDragEnd = async (e) => {
     const cardId = e.dataTransfer.getData("cardId");
-
-    setCards((pv) => pv.filter((c) => c.id !== cardId));
-
-    setActive(false);
+  
+    try {
+      await fetch(`http://localhost:3000/api/tasks/${cardId}`, {
+        method: 'DELETE',
+      });
+  
+      setCards((prevCards) => prevCards.filter((c) => c.id !== cardId));
+      setActive(false);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
   };
+  
 
   return (
     <div
