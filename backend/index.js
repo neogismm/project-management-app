@@ -1,6 +1,7 @@
 import express from 'express';
 import connectDB from './config/db.js';
 import router from './routes/taskRoutes.js';
+import cors from 'cors';
 
 const app = express();
 
@@ -8,6 +9,7 @@ const app = express();
 connectDB();
 
 // Middleware to parse JSON requests
+app.use(cors());
 app.use(express.json());
 
 // API Routes

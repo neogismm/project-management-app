@@ -1,10 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Column from "./Column";
 import BurnBarrel from "./BurnBarrel";
 import DEFAULT_CARDS from "../data/defaultCards";
 
 const Board = () => {
-  const [cards, setCards] = useState(DEFAULT_CARDS);
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/tasks');
+        const data = await response.json();
+        const formattedData = data.map(task => ({
+          id: task._id,
+          title: task.title,
+          column: task.column
+        }));
+        setCards(formattedData);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   return (
     <div className="flex h-full w-full gap-5 overflow-scroll p-12">

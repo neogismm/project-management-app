@@ -6,7 +6,7 @@ const AddCard = ({ column, setCards }) => {
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!text.trim().length) return;
@@ -14,12 +14,26 @@ const AddCard = ({ column, setCards }) => {
     const newCard = {
       column,
       title: text.trim(),
-      id: Math.random().toString(),
     };
 
-    setCards((pv) => [...pv, newCard]);
+    try {
+      const response = await fetch("http://localhost:3000/api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCard),
+      });
 
-    setAdding(false);
+      const createdCard = await response.json();
+
+      // Add the new card from the backend to your cards state
+      setCards((prevCards) => [...prevCards, createdCard]);
+
+      setAdding(false);
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
   };
 
   return (
