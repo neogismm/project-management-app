@@ -10,37 +10,46 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
     e.dataTransfer.setData("cardId", card.id);
   };
 
-  const handleDragEnd = (e) => {
+  const handleDragEnd = async (e) => {
     const cardId = e.dataTransfer.getData("cardId");
-
-    setActive(false);
-    clearHighlights();
 
     const indicators = getIndicators();
     const { element } = getNearestIndicator(e, indicators);
-
+  
     const before = element.dataset.before || "-1";
-
+  
     if (before !== cardId) {
       let copy = [...cards];
       let cardToTransfer = copy.find((c) => c.id === cardId);
       if (!cardToTransfer) return;
-      cardToTransfer = { ...cardToTransfer, column };
-
+  
+      const updatedCard = { ...cardToTransfer, column };
+  
       copy = copy.filter((c) => c.id !== cardId);
-
+  
       const moveToBack = before === "-1";
-
+  
       if (moveToBack) {
-        copy.push(cardToTransfer);
+        copy.push(updatedCard);
       } else {
         const insertAtIndex = copy.findIndex((el) => el.id === before);
         if (insertAtIndex === undefined) return;
-
-        copy.splice(insertAtIndex, 0, cardToTransfer);
+        copy.splice(insertAtIndex, 0, updatedCard);
       }
-
-      setCards(copy);
+  
+      try {
+        await fetch(`http://localhost:3000/api/tasks/${cardToTransfer.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedCard),
+        });
+  
+        setCards(copy);
+      } catch (error) {
+        console.error('Error updating task:', error);
+      }
     }
   };
 
