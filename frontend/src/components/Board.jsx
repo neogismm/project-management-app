@@ -14,7 +14,8 @@ const Board = () => {
         const formattedData = data.map(task => ({
           id: task._id,
           title: task.title,
-          column: task.column
+          column: task.column,
+          position: task.position
         }));
         setCards(formattedData);
       } catch (error) {

@@ -43,10 +43,10 @@ const createTask = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, column } = req.body;
+    const { title, column, position } = req.body;
     const updatedTask = await Task.findByIdAndUpdate(
       id,
-      { title, column },
+      { title, column, position },
       { new: true }
     );
     res.json(updatedTask);

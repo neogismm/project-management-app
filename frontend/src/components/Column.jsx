@@ -8,47 +8,61 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
 
   const handleDragStart = (e, card) => {
     e.dataTransfer.setData("cardId", card.id);
+    e.dataTransfer.setData("sourceColumn", column);
   };
 
   const handleDragEnd = async (e) => {
     const cardId = e.dataTransfer.getData("cardId");
+    const sourceColumn = e.dataTransfer.getData("sourceColumn");
+
+    if (sourceColumn !== column) return;
 
     const indicators = getIndicators();
     const { element } = getNearestIndicator(e, indicators);
-  
+
     const before = element.dataset.before || "-1";
-  
+
     if (before !== cardId) {
-      let copy = [...cards];
+      // Filter the cards to include only those from the sourceColumn
+      let copy = cards.filter((c) => c.column === sourceColumn);
       let cardToTransfer = copy.find((c) => c.id === cardId);
       if (!cardToTransfer) return;
-  
-      const updatedCard = { ...cardToTransfer, column };
-  
+
       copy = copy.filter((c) => c.id !== cardId);
-  
+
       const moveToBack = before === "-1";
-  
+
+      let newPosition;
       if (moveToBack) {
-        copy.push(updatedCard);
+        copy.push(cardToTransfer);
+        newPosition = copy.length - 1;
       } else {
         const insertAtIndex = copy.findIndex((el) => el.id === before);
         if (insertAtIndex === undefined) return;
-        copy.splice(insertAtIndex, 0, updatedCard);
+        copy.splice(insertAtIndex, 0, cardToTransfer);
+        newPosition = insertAtIndex;
       }
-  
+
+      // Update positions for all cards in the column
+      copy = copy.map((c, index) => ({ ...c, position: index }));
+
+      // Make API calls to update the positions of all affected cards
       try {
-        await fetch(`http://localhost:3000/api/tasks/${cardToTransfer.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updatedCard),
-        });
-  
+        await Promise.all(
+          copy.map((c) =>
+            fetch(`http://localhost:3000/api/tasks/${c.id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ ...c, column, position: c.position }),
+            })
+          )
+        );
+
         setCards(copy);
       } catch (error) {
-        console.error('Error updating task:', error);
+        console.error("Error updating tasks:", error);
       }
     }
   };
@@ -111,7 +125,10 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
     setActive(false);
   };
 
-  const filteredCards = cards.filter((c) => c.column === column);
+  // Filter and sort cards by position
+  const filteredCards = cards
+    .filter((c) => c.column === column)
+    .sort((a, b) => a.position - b.position);
 
   return (
     <div className="w-56 shrink-0">
